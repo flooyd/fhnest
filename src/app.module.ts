@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TagModule } from './tag/tag.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './ormconfig';
 import { UserModule } from './user/user.module';
@@ -10,13 +9,7 @@ import { VoteModule } from './votes/vote.module';
 import { AuthMiddleware } from './user/middleware/auth.middleware';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(config),
-    TagModule,
-    UserModule,
-    PostModule,
-    VoteModule,
-  ],
+  imports: [TypeOrmModule.forRoot(config), UserModule, PostModule, VoteModule],
   controllers: [AppController],
   providers: [AppService],
 })
