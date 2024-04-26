@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-const config: PostgresConnectionOptions = {
+let config: PostgresConnectionOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
@@ -12,6 +12,17 @@ const config: PostgresConnectionOptions = {
   synchronize: true,
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 };
+
+if(process.env.NODE_ENV === 'production') {
+  config = {
+    ...config,
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  };
+}
 
 const dataSource = new DataSource(config);
 
