@@ -13,4 +13,10 @@ export class PostEntity {
 
   @Column()
   authorId: number;
+
+  @Column({nullable: true})
+  createdAt: Date;
+
+  @Column({nullable: true})
+  updatedAt: Date;
 }
