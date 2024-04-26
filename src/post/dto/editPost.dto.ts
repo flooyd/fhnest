@@ -9,4 +9,9 @@ export class EditPostDto {
 
   @IsNotEmpty()
   readonly authorId: number;
+
+  @IsNotEmpty()
+  readonly updatedAt: Date;
+
+  readonly createdAt: Date;
 }

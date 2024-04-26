@@ -15,14 +15,17 @@ export class PostService {
   ) {}
 
   async findAll(): Promise<PostEntity[]> {
-    return this.postRepository.find();
+    return this.postRepository.find({order: {createdAt: 'DESC'}});
   }
+
 
   async createPost(createPostDto: EditPostDto): Promise<PostEntity> {
     const post = new PostEntity();
     post.title = createPostDto.title;
     post.content = createPostDto.content;
     post.authorId = createPostDto.authorId;
+    post.createdAt = new Date();
+    post.updatedAt = new Date();
     return this.postRepository.save(post);
   }
 
@@ -31,6 +34,7 @@ export class PostService {
     post.title = editPostDto.title;
     post.content = editPostDto.content;
     post.authorId = editPostDto.authorId;
+    post.updatedAt = new Date();
     return this.postRepository.save(post);
   }
 
