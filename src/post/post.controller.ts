@@ -42,6 +42,7 @@ export class PostController {
 
   @Delete('posts/:id')
   async deletePost(@Param('id') id: string): Promise<void> {
+    console.log('controller delete post', id)
     await this.postService.deletePost(+id);
   }
 }

@@ -39,6 +39,7 @@ export class PostService {
   }
 
   async deletePost(id: number): Promise<void> {
+    console.log('delete post!!!!', id)
     await this.postRepository.delete(id);
   }
 
