@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PostService } from 'src/post/post.service';
 import { VoteService } from './vote.service';
 import {
   VotesResponseInterface,
   VoteResponseInterface,
 } from './types/response';
+import { AuthGuard } from 'src/user/guards/auth.guard';
+import { User } from 'src/user/decoraters/user.decorator';
 
 @Controller()
 export class VoteController {
@@ -46,11 +48,13 @@ export class VoteController {
   }
 
   @Post('votes/posts/:postId/:voteType')
+  @UseGuards(AuthGuard)
   async editVoteForPost(
     @Param('postId') postId: number,
     @Param('voteType') voteType: string,
+    @User() user: any,
   ): Promise<VoteResponseInterface> {
-    const userId = 1;
+    const userId = user.id;
     const editedVote = await this.voteService.editVoteForPost(
       postId,
       voteType,
