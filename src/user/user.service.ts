@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from 'src/config';
-import { UserResponseInterface } from './types/response';
+import { UserResponse, UserResponseInterface, UsersResponseInterface } from './types/response';
 import { LoginUserDto } from './dto/loginUser.dto';
 
 @Injectable()
@@ -91,6 +91,20 @@ export class UserService {
         displayName,
         token,
       },
+    };
+  }
+
+  buildUsersResponse(users: UserEntity[]): UsersResponseInterface {
+    return {
+      users: users.map((user) => {
+        const { id, bio, image, displayName } = user;
+        return {
+          id,
+          bio,
+          image,
+          displayName,
+        };
+      }),
     };
   }
 }

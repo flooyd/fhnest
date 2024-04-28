@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
-import { UserResponseInterface } from './types/response';
+import { UserResponse, UserResponseInterface, UsersResponse, UsersResponseInterface } from './types/response';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { User } from './decoraters/user.decorator';
 import { AuthGuard } from './guards/auth.guard';
@@ -30,9 +30,9 @@ export class UserController {
 
   @Get('users')
   @UseGuards(AuthGuard)
-  async findAll(): Promise<UserResponseInterface[]> {
+  async findAll(): Promise<UsersResponseInterface> {
     const users = await this.userService.findAll();
-    return users.map((user) => this.userService.buildUserResponse(user));
+    return this.userService.buildUsersResponse(users);
   }
 
   @Post('users/login')
@@ -48,14 +48,8 @@ export class UserController {
   async editUser(
     @Body('user') createUserDto: CreateUserDto,
     @User() user: any,
-  ): Promise<UserResponseInterface> {
+  ): Promise<UsersResponseInterface> {
     const editedUser = await this.userService.editUser(user.id, createUserDto);
-    return this.userService.buildUserResponse(editedUser);
-  }
-
-  @Get('user')
-  @UseGuards(AuthGuard)
-  async findCurrentUser(@User() user: any): Promise<UserResponseInterface> {
-    return this.userService.buildUserResponse(user);
+    return this.userService.buildUsersResponse([editedUser]);
   }
 }

@@ -12,6 +12,6 @@ export class EditPostDto {
 
   @IsNotEmpty()
   readonly updatedAt: Date;
-
+  
   readonly createdAt: Date;
 }

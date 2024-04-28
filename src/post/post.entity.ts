@@ -14,10 +14,9 @@ export class PostEntity {
   @Column()
   authorId: number;
 
-  @Column({ nullable: true })
+  @Column()
   createdAt: Date;
 
-  //updatedAt default value is Date.now
-  @Column({ nullable: true })
+  @Column()
   updatedAt: Date;
 }

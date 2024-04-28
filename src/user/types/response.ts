@@ -10,3 +10,9 @@ export type UserResponse = Omit<
 export interface UserResponseInterface {
   user: UserResponse;
 }
+
+export type UsersResponse = Omit<UserEntity, 'password' | 'hashPassword' | 'comparePassword' | 'username'>;
+
+export interface UsersResponseInterface {
+  users: UsersResponse[];
+}

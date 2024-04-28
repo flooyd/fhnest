@@ -10,7 +10,6 @@ import { ExpressRequest } from 'src/types/expressRequest.interface';
 export class AuthGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const request = ctx.switchToHttp().getRequest<ExpressRequest>();
-
     if (request.user) {
       return true;
     } else {

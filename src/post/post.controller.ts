@@ -8,22 +8,27 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { EditPostDto } from './dto/editPost.dto';
 import { PostResponseInterface } from './types/response';
+import { AuthGuard } from 'src/user/guards/auth.guard';
+import { User } from 'src/user/decoraters/user.decorator';
 
 @Controller()
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get('posts')
+  @UseGuards(AuthGuard)
   async findAll(): Promise<PostResponseInterface[]> {
     const posts = await this.postService.findAll();
     return posts.map((post) => this.postService.buildPostResponse(post));
   }
 
   @Post('posts')
+  @UseGuards(AuthGuard)
   async createPost(
     @Body('post') createPostDto: EditPostDto,
   ): Promise<PostResponseInterface> {
@@ -32,6 +37,7 @@ export class PostController {
   }
 
   @Put('posts/:id')
+  @UseGuards(AuthGuard)
   async updatePost(
     @Param('id') id: string,
     @Body('post') editPostDto: EditPostDto,
@@ -41,8 +47,8 @@ export class PostController {
   }
 
   @Delete('posts/:id')
-  async deletePost(@Param('id') id: string): Promise<void> {
-    console.log('controller delete post', id)
-    await this.postService.deletePost(+id);
+  @UseGuards(AuthGuard)
+  async deletePost(@Param('id') id: string, @User() user: any): Promise<void> {
+    await this.postService.deletePost(+id, user);
   }
 }

@@ -1,6 +1,6 @@
 //create posts service
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostEntity } from './post.entity';
@@ -26,7 +26,7 @@ export class PostService {
     post.authorId = createPostDto.authorId;
     post.createdAt = new Date();
     post.updatedAt = new Date();
-    return this.postRepository.save(post);
+    return await this.postRepository.save(post);
   }
 
   async updatePost(id: number, editPostDto: EditPostDto): Promise<PostEntity> {
@@ -38,8 +38,11 @@ export class PostService {
     return this.postRepository.save(post);
   }
 
-  async deletePost(id: number): Promise<void> {
-    console.log('delete post!!!!', id)
+  async deletePost(id: number, user: any): Promise<void> {
+    const post = await this.postRepository.findOne({ where: { id: id } });
+    if (post.authorId !== user.id) {
+      throw new UnauthorizedException('You are not the author of this post');
+    }
     await this.postRepository.delete(id);
   }
 
@@ -49,6 +52,8 @@ export class PostService {
       title: post.title,
       content: post.content,
       authorId: post.authorId,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
     };
   }
 }
