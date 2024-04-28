@@ -48,8 +48,8 @@ export class UserController {
   async editUser(
     @Body('user') createUserDto: CreateUserDto,
     @User() user: any,
-  ): Promise<UsersResponseInterface> {
+  ): Promise<UserResponseInterface> {
     const editedUser = await this.userService.editUser(user.id, createUserDto);
-    return this.userService.buildUsersResponse([editedUser]);
+    return this.userService.buildUserResponse(editedUser);
   }
 }
