@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
-import { UserResponse, UserResponseInterface, UsersResponse, UsersResponseInterface } from './types/response';
+import { UserResponse, UserResponseInterface, UsersResponse } from './types/response';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { User } from './decoraters/user.decorator';
 import { AuthGuard } from './guards/auth.guard';
@@ -30,7 +30,7 @@ export class UserController {
 
   @Get('users')
   @UseGuards(AuthGuard)
-  async findAll(): Promise<UsersResponseInterface> {
+  async findAll(): Promise<UsersResponse[]> {
     const users = await this.userService.findAll();
     return this.userService.buildUsersResponse(users);
   }
