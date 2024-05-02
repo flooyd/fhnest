@@ -12,6 +12,9 @@ export class UserEntity {
   @Column()
   displayName: string;
 
+  @Column({nullable: true})
+  role: string;
+
   @Column({ default: '' })
   bio: string;
 

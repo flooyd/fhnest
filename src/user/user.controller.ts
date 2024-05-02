@@ -28,6 +28,16 @@ export class UserController {
     return this.userService.buildUserResponse(user);
   }
 
+  @Post('users/setRole/:id/:role')
+  @UseGuards(AuthGuard)
+  async setRole(
+    @User() user: any,
+    @Body('role') role: string,
+  ): Promise<UserResponseInterface> {
+    const userWithRole = await this.userService.setRole(user, user.id, role);
+    return this.userService.buildUserResponse(userWithRole);
+  }
+
   @Get('users')
   @UseGuards(AuthGuard)
   async findAll(): Promise<UsersResponse[]> {

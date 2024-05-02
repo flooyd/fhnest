@@ -15,7 +15,7 @@ export class PostService {
   ) {}
 
   async findAll(): Promise<PostEntity[]> {
-    return this.postRepository.find({order: {createdAt: 'DESC'}});
+    return this.postRepository.find({order: {updatedAt: 'DESC'}});
   }
 
 

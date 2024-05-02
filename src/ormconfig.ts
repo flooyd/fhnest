@@ -25,8 +25,6 @@ if(process.env.NODE_ENV === 'production') {
   };
 }
 
-console.log(config);
-
 const dataSource = new DataSource(config);
 
 export default dataSource;

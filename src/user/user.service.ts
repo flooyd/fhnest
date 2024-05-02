@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -32,9 +32,17 @@ export class UserService {
   }
 
   async editUser(id: number, data: CreateUserDto): Promise<UserEntity> {
-    console.log('id', id, 'data', data);
     const user = await this.userRepository.findOne({ where: { id } });
     Object.assign(user, data);
+    return await this.userRepository.save(user);
+  }
+
+  async setRole(adminUser: any, id: number, role: string): Promise<UserEntity> {
+    if(adminUser.role !== 'admin') {
+      throw new UnauthorizedException('You are not an admin');
+    }
+    const user = await this.userRepository.findOne({ where: { id } });
+    user.role = role;
     return await this.userRepository.save(user);
   }
 
@@ -74,13 +82,14 @@ export class UserService {
         id: user.id,
         username: user.username,
         displayName: user.displayName,
+        role: user.role
       },
       JWT_SECRET,
     );
   }
 
   buildUserResponse(user: UserEntity): UserResponseInterface {
-    const { id, username, bio, image, displayName } = user;
+    const { id, username, bio, image, displayName, role } = user;
     const token = this.generateJwt(user);
     return {
       user: {
@@ -90,19 +99,21 @@ export class UserService {
         image,
         displayName,
         token,
+        role
       },
     };
   }
 
   buildUsersResponse(users: UserEntity[]): UsersResponse[] {
     return users.map((user) => {
-      const { id, username, bio, image, displayName } = user;
+      const { id, username, bio, image, displayName, role } = user;
       return {
         id,
         username,
         bio,
         image,
         displayName,
+        role
       };
     });
   }
